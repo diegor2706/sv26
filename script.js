@@ -1,40 +1,46 @@
-// DATOS DE LOS VIAJES (Tus datos personalizados con la propiedad 'bg' añadida)
+// DATOS DE LOS VIAJES
 const data = [
     { 
         t: "Finca de Liñares, Abegondo", 
         d: "La primera vez que convivimos juntos", 
         img: "img/finca_charlie.jpeg", 
-        bg: "img/fondos/9781477_orig.jpg" 
+        bg: "img/fondos/9781477_orig.jpg",
+        song: "audio/Don McLean-American Pie.mp3"
     },
     { 
         t: "Fisterra, A Coruña", 
         d: "Mucho Mario Kart y playita", 
         img: "img/fisterra.jpeg", 
-        bg: "img/fondos/Vista_Fisterra.jpg" 
+        bg: "img/fondos/Vista_Fisterra.jpg",
+        song: "audio/La Casa Por El Tejado - Fito Fitipaldis.mp3"
     },
     { 
         t: "Val de San Vicente, Cantabria", 
         d: "Tiendas de camapaña y mucha lluvia", 
         img: "img/cantabria.jpeg", 
-        bg: "img/fondos/kampaoh-las-arenas-general-126e0435.jpg" 
+        bg: "img/fondos/kampaoh-las-arenas-general-126e0435.jpg",
+        song: "audio/Relajarse Sonidos de Lluvia.mp3"
     },
     { 
         t: "Illas Cíes, Vigo", 
         d: "Escapada antes de empezar las clases", 
         img: "img/illas_cies.jpeg", 
-        bg: "img/fondos/illascieswallpaper.jpg" 
+        bg: "img/fondos/illascieswallpaper.jpg",
+        song: "audio/Luck Ra, BM - La Morocha.mp3"
     },
     { 
         t: "Isla de Santa Clara, Donosti", 
         d: "Después de tantos años, al final fuimos", 
         img: "img/isla_donosti.jpeg", 
-        bg: "img/fondos/barco-a-la-isla-rutas-en-barco-en-Donostia-San-Sebastian-1024x656.jpg" 
+        bg: "img/fondos/barco-a-la-isla-rutas-en-barco-en-Donostia-San-Sebastian-1024x656.jpg",
+        song: "audio/Zu Zara - Autobus Magikoa.mp3" /* CORREGIDO: Añadido audio/ */
     },
     { 
         t: "Barcelona, Cataluña", 
         d: "Best regalo ever", 
         img: "img/barcelona.jpeg", 
-        bg: "img/fondos/park-guell-1.jpg" 
+        bg: "img/fondos/park-guell-1.jpg",
+        song: "audio/Post Malone - Circles.mp3"
     }
 ];
 
@@ -44,8 +50,13 @@ let activeIndex = Math.floor(data.length * 100);
 const container = document.getElementById('list');
 const titleEl = document.getElementById('title');
 const descEl = document.getElementById('desc');
-// NUEVO: Seleccionamos el elemento del fondo
 const bgEl = document.getElementById('dynamic-bg');
+
+// CONTROL DE AUDIO GLOBAL
+let currentAudio = new Audio();
+currentAudio.loop = true; // Bucle infinito
+currentAudio.volume = 0.5; // Volumen medio
+let isSoundOn = false; // Empezamos en silencio
 
 // Función auxiliar para obtener el módulo real
 function getMod(n, m) {
@@ -113,15 +124,14 @@ function update() {
         item.style.pointerEvents = opacity === 0 ? 'none' : 'auto';
     });
 
-    // --- NUEVO CÓDIGO PARA ACTUALIZAR EL FONDO ---
     const dataIndex = getMod(activeIndex, len);
     
-    // Cambiamos la imagen del fondo
+    // 1. Cambiamos la imagen del fondo
     if(bgEl) {
         bgEl.style.backgroundImage = `url(${data[dataIndex].bg})`;
     }
     
-    // Actualizamos textos
+    // 2. Actualizamos textos
     titleEl.style.opacity = 0;
     descEl.style.opacity = 0;
     
@@ -131,6 +141,47 @@ function update() {
         titleEl.style.opacity = 1;
         descEl.style.opacity = 1;
     }, 200);
+
+    // 3. GESTIÓN DEL AUDIO
+    // Si el sonido está activado, reproducimos la canción
+    if (isSoundOn) {
+        playMusic(data[dataIndex].song);
+    } else {
+        // Si está en silencio, solo cargamos la ruta pero no damos play
+        currentAudio.src = data[dataIndex].song;
+    }
+}
+
+// --- FUNCIONES DE AUDIO ---
+
+function toggleSound() {
+    const iconMute = document.getElementById('icon-mute');
+    const iconSound = document.getElementById('icon-sound');
+    
+    if (!isSoundOn) {
+        // ACTIVAR SONIDO
+        isSoundOn = true;
+        iconMute.style.display = 'none';
+        iconSound.style.display = 'block';
+        
+        // Reproducir la canción actual inmediatamente
+        const dataIndex = getMod(activeIndex, data.length);
+        playMusic(data[dataIndex].song);
+    } else {
+        // DESACTIVAR SONIDO (MUTE)
+        isSoundOn = false;
+        iconSound.style.display = 'none';
+        iconMute.style.display = 'block';
+        currentAudio.pause();
+    }
+}
+
+function playMusic(songUrl) {
+    // Si la canción ya es la misma que está sonando y no está pausada, no hacemos nada
+    if (currentAudio.src.includes(encodeURI(songUrl)) && !currentAudio.paused) return;
+    
+    currentAudio.src = songUrl;
+    currentAudio.play().catch(e => console.log("Esperando interacción para reproducir..."));
 }
 
 function next() {
