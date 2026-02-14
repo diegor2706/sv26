@@ -155,23 +155,19 @@ function update() {
 // --- FUNCIONES DE AUDIO ---
 
 function toggleSound() {
-    const iconMute = document.getElementById('icon-mute');
-    const iconSound = document.getElementById('icon-sound');
+    const audioIcon = document.getElementById('audio-icon');
     
     if (!isSoundOn) {
         // ACTIVAR SONIDO
         isSoundOn = true;
-        iconMute.style.display = 'none';
-        iconSound.style.display = 'block';
+        audioIcon.innerText = 'volume_up'; // Cambia el texto al icono de sonido
         
-        // Reproducir la canción actual inmediatamente
         const dataIndex = getMod(activeIndex, data.length);
         playMusic(data[dataIndex].song);
     } else {
         // DESACTIVAR SONIDO (MUTE)
         isSoundOn = false;
-        iconSound.style.display = 'none';
-        iconMute.style.display = 'block';
+        audioIcon.innerText = 'volume_off'; // Cambia el texto al icono de mute
         currentAudio.pause();
     }
 }
