@@ -30,15 +30,15 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* Se coloca DETRÁS de todo */
+    z-index: -1;
     background-size: cover;
     background-position: center;
-    transition: background-image 0.5s ease-in-out; /* Transición suave al cambiar foto */
+    transition: background-image 0.5s ease-in-out;
     
-    /* LA MAGIA: Desenfoca y oscurece la imagen */
+    /* AÑADE ESTA LÍNEA (Es tu primera foto de fondo): */
+    background-image: url('img/fondos/9781477_orig.jpg');
+    
     filter: blur(5px) brightness(0.4); 
-    
-    /* Escalamos un poco la imagen para que el desenfoque no deje bordes blancos */
     transform: scale(1.1); 
 }
 
