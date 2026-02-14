@@ -5,7 +5,7 @@ const data = [
         d: "La primera vez que convivimos juntos", 
         img: "img/finca_charlie.jpeg", 
         bg: "img/fondos/9781477_orig.jpg",
-        song: "audio/Don McLean-American Pie.mp3"
+        song: "audio/Don McLean - American Pie.mp3"
     },
     { 
         t: "Fisterra, A Coruña", 
